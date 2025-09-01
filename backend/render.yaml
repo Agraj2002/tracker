@@ -5,7 +5,10 @@ services:
     plan: free
     buildCommand: npm install
     startCommand: npm start
+  
     envVars:
+      - key: FRONTEND_URL
+        value: https://tracker-uwzt.vercel.app/
       - key: NODE_ENV
         value: production
       - key: JWT_SECRET
