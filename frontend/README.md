@@ -186,22 +186,7 @@ The application includes demo credentials for testing:
 
 - **Admin**: admin@example.com / admin123
 - **User**: user@example.com / user123  
-- **Read-Only**: readonly@example.com / readonly123
-
-## 🧪 Testing
-
-### Testing Strategy
-- Component unit tests
-- Integration tests for critical flows
-- E2E tests for user journeys
-- API integration tests
-
-### Test Commands
-```bash
-npm run test           # Run unit tests
-npm run test:coverage  # Run with coverage
-npm run e2e           # Run E2E tests
-```
+- **Read-Only**: readonly@example.com / readonly12
 
 ## 📱 Responsive Design
 
