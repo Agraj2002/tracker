@@ -95,12 +95,12 @@ Frontend runs on http://localhost:5173
 Backend (Render)
 Repo: Backend Repo Link
 
-Live API: https://tracker-8lko.onrender.com
+Live API: [https://tracker-8lko.onrender.com](https://tracker-8lko.onrender.com)
 
 Frontend (Vercel/Netlify)
 Repo: Frontend Repo Link
 
-Live App: https://tracker-uwzt.vercel.app/
+Live App: [https://tracker-uwzt.vercel.app/](https://tracker-uwzt.vercel.app/)
 
 📌 API Documentation
 Swagger docs available at:
