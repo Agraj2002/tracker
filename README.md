@@ -22,8 +22,8 @@ Built with **Node.js + Express + PostgreSQL + Redis** (backend) and **React + Vi
 
 ## ⚙️ Setup
 
-### Backend
 ```bash
+Backend
 cd backend
 npm install
 cp .env.example .env   # Update DATABASE_URL, REDIS_URL, JWT_SECRET
