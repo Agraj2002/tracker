@@ -1,7 +1,7 @@
 # 📊 Expense Tracker
 
 **Live Demo:**  
-- 🌐 [Frontend App](https://tracker-uwzt.vercel.app/)  
+- 🌐 [Frontend App](https://tracker-sigma-henna.vercel.app)  
 - ⚙️ [Backend API](https://tracker-8lko.onrender.com)  
 
 A full-stack **personal finance tracker** with authentication, categories, transactions, analytics, and admin dashboard.  
@@ -22,7 +22,6 @@ Built with **Node.js + Express + PostgreSQL + Redis** (backend) and **React + Vi
 
 ## ⚙️ Setup
 
-```bash
 Backend
 cd backend
 npm install
@@ -32,8 +31,6 @@ npm start
 Runs at: http://localhost:5000
 
 Frontend
-bash
-Copy code
 cd frontend
 npm install
 cp .env.example .env   # Set VITE_API_URL=http://localhost:5000
