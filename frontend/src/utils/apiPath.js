@@ -2,11 +2,10 @@ import axios from 'axios';
 
 // Base URL configuration
 const BASE_URL = import.meta.env.VITE_API_URL || 
-  (import.meta.env.PROD ? 'https://tracker-8lko.onrender.com' : 'http://localhost:5000');
+  (import.meta.env.PROD ? 'https://tracker-8lko.onrender.com' : 'http://localhost:5000'); 
 
 // Create axios instance with default configuration
 const api = axios.create({
-  baseURL: BASE_URL,
   timeout: 30000,
   headers: {
     'Content-Type': 'application/json',
@@ -44,47 +43,47 @@ api.interceptors.response.use(
 export const API_ENDPOINTS = {
   // Authentication endpoints
   AUTH: {
-    LOGIN: '/api/auth/login',
-    REGISTER: '/api/auth/register',
-    LOGOUT: '/api/auth/logout',
-    ME: '/api/auth/me',
-    REFRESH: '/api/auth/refresh',
+    LOGIN: `${BASE_URL}/api/auth/login`,
+    REGISTER: `${BASE_URL}/api/auth/register`,
+    LOGOUT: `${BASE_URL}/api/auth/logout`,
+    ME: `${BASE_URL}/api/auth/me`,
+    REFRESH: `${BASE_URL}/api/auth/refresh`,
   },
   
   // Transaction endpoints
   TRANSACTIONS: {
-    BASE: '/api/transactions',
-    CREATE: '/api/transactions',
-    UPDATE: (id) => `/api/transactions/${id}`,
-    DELETE: (id) => `/api/transactions/${id}`,
-    GET_BY_ID: (id) => `/api/transactions/${id}`,
-    SEARCH: '/api/transactions/search',
-    EXPORT: '/api/transactions/export',
+    BASE: `${BASE_URL}/api/transactions`,
+    CREATE: `${BASE_URL}/api/transactions`,
+    UPDATE: (id) => `${BASE_URL}/api/transactions/${id}`,
+    DELETE: (id) => `${BASE_URL}/api/transactions/${id}`,
+    GET_BY_ID: (id) => `${BASE_URL}/api/transactions/${id}`,
+    SEARCH: `${BASE_URL}/api/transactions/search`,
+    EXPORT: `${BASE_URL}/api/transactions/export`,
   },
   
   // Category endpoints
   CATEGORIES: {
-    BASE: '/api/categories',
-    CREATE: '/api/categories',
-    UPDATE: (id) => `/api/categories/${id}`,
-    DELETE: (id) => `/api/categories/${id}`,
-    GET_BY_ID: (id) => `/api/categories/${id}`,
+    BASE: `${BASE_URL}/api/categories`,
+    CREATE: `${BASE_URL}/api/categories`,
+    UPDATE: (id) => `${BASE_URL}/api/categories/${id}`,
+    DELETE: (id) => `${BASE_URL}/api/categories/${id}`,
+    GET_BY_ID: (id) => `${BASE_URL}/api/categories/${id}`,
   },
   
   // Analytics endpoints
   ANALYTICS: {
-    DASHBOARD: '/api/analytics/dashboard',
-    TRENDS: '/api/analytics/trends',
-    PATTERNS: '/api/analytics/patterns',
-    BUDGET: '/api/analytics/budget',
+    DASHBOARD: `${BASE_URL}/api/analytics/dashboard`,
+    TRENDS: `${BASE_URL}/api/analytics/trends`,
+    PATTERNS: `${BASE_URL}/api/analytics/patterns`,
+    BUDGET: `${BASE_URL}/api/analytics/budget`,
   },
   
   // Admin endpoints
   ADMIN: {
-    USERS: '/api/admin/users',
-    STATS: '/api/admin/stats',
-    UPDATE_USER_ROLE: (id) => `/api/admin/users/${id}/role`,
-    DELETE_USER: (id) => `/api/admin/users/${id}`,
+    USERS: `${BASE_URL}/api/admin/users`,
+    STATS: `${BASE_URL}/api/admin/stats`,
+    UPDATE_USER_ROLE: (id) => `${BASE_URL}/api/admin/users/${id}/role`,
+    DELETE_USER: (id) => `${BASE_URL}/api/admin/users/${id}`,
   }
 };
 

@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useReducer, useCallback, useMemo } from 'react';
-import axios from 'axios';
+import { apiService, API_ENDPOINTS } from '../utils/apiPath';
 import toast from 'react-hot-toast';
 
 // Helper function to safely parse JSON from localStorage
@@ -109,7 +109,7 @@ export const AuthProvider = ({ children }) => {
     if (!state.token) return;
 
     try {
-      const response = await axios.get('/api/auth/me');
+      const response = await apiService.auth.getCurrentUser();
       // Check if response has nested data structure
       const user = response.data.data?.user || response.data.user || response.data.data || response.data;
       dispatch({
@@ -125,13 +125,11 @@ export const AuthProvider = ({ children }) => {
     }
   }, [state.token]);
 
-  // Set up axios interceptor for authentication
+  // Set up token in localStorage
   React.useEffect(() => {
     if (state.token) {
-      axios.defaults.headers.common['Authorization'] = `Bearer ${state.token}`;
       localStorage.setItem('token', state.token);
     } else {
-      delete axios.defaults.headers.common['Authorization'];
       localStorage.removeItem('token');
       localStorage.removeItem('user');
     }
@@ -158,7 +156,7 @@ export const AuthProvider = ({ children }) => {
     dispatch({ type: AUTH_ACTIONS.LOGIN_START });
     
     try {
-      const response = await axios.post('/api/auth/login', credentials);
+      const response = await apiService.auth.login(credentials);
       const { user, token } = response.data.data; // Extract from response.data.data
       
       dispatch({
@@ -184,7 +182,7 @@ export const AuthProvider = ({ children }) => {
     dispatch({ type: AUTH_ACTIONS.SIGNUP_START });
     
     try {
-      const response = await axios.post('/api/auth/register', userData);
+      const response = await apiService.auth.register(userData);
       const { user, token } = response.data.data; // Extract from response.data.data
       
       dispatch({
