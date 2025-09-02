@@ -82,7 +82,12 @@ const IncomeExpenseChart = ({ data, timeframe }) => {
           <YAxis 
             tick={{ fill: chartColors.text, fontSize: 12 }}
             axisLine={{ stroke: chartColors.grid }}
-            tickFormatter={(value) => `$${(value / 1000).toFixed(0)}k`}
+            tickFormatter={(value) => {
+              if (value >= 1000) {
+                return `$${(value / 1000).toFixed(0)}k`;
+              }
+              return `$${value}`;
+            }}
           />
           <Tooltip content={<CustomTooltip />} />
           <Legend 

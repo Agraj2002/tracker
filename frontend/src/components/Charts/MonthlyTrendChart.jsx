@@ -89,7 +89,12 @@ const MonthlyTrendChart = ({ data, showArea = false }) => {
           <YAxis 
             tick={{ fill: chartColors.text, fontSize: 12 }}
             axisLine={{ stroke: chartColors.grid }}
-            tickFormatter={(value) => `$${(value / 1000).toFixed(0)}k`}
+            tickFormatter={(value) => {
+              if (Math.abs(value) >= 1000) {
+                return `$${(value / 1000).toFixed(0)}k`;
+              }
+              return `$${value}`;
+            }}
           />
           <Tooltip content={<CustomTooltip />} />
           <Legend 

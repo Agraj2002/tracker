@@ -33,10 +33,10 @@ const CategoryPieChart = ({ data }) => {
     return data
       .filter(item => item.amount > 0)
       .map((item, index) => ({
-        name: item.category || 'Other',
+        name: item.category || item.name || 'Other',
         value: Math.abs(item.amount || 0),
         percentage: item.percentage || 0,
-        color: COLORS[index % COLORS.length]
+        color: item.color || COLORS[index % COLORS.length]
       }))
       .sort((a, b) => b.value - a.value);
   }, [data]);
