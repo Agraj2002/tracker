@@ -22,7 +22,6 @@ Built with **Node.js + Express + PostgreSQL + Redis** (backend) and **React + Vi
 
 ## ⚙️ Setup
 
-```bash
 Backend
 cd backend
 npm install
@@ -32,8 +31,6 @@ npm start
 Runs at: http://localhost:5000
 
 Frontend
-bash
-Copy code
 cd frontend
 npm install
 cp .env.example .env   # Set VITE_API_URL=http://localhost:5000
