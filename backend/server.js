@@ -36,8 +36,13 @@ app.use(compression());
 
 const allowedOrigins = [
   'http://localhost:5173',
+  'http://localhost:5173',
+  'http://localhost:5174',
+  'https://tracker-uwzt.vercel.app',
+  'https://*.vercel.app',
+  'https://tracker-sigma-henna.vercel.app',
   process.env.FRONTEND_URL
-  
+
 ];
 
 app.use(cors({
