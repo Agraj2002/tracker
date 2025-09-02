@@ -1,7 +1,7 @@
 # 📊 Expense Tracker
 
 **Live Demo:**  
-- 🌐 [Frontend App](https://tracker-uwzt.vercel.app/)  
+- 🌐 [Frontend App](https://tracker-sigma-henna.vercel.app)  
 - ⚙️ [Backend API](https://tracker-8lko.onrender.com)  
 
 A full-stack **personal finance tracker** with authentication, categories, transactions, analytics, and admin dashboard.  
