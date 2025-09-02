@@ -16,10 +16,12 @@ const AdminPanel = () => {
           apiService.admin.getUsers(),
           apiService.admin.getStats()
         ]);
-        setUsers(usersRes.data);
-        setStats(statsRes.data);
+        setUsers(usersRes.data.data?.users || []);
+        setStats(statsRes.data.data || statsRes.data);
       } catch (error) {
         console.error('Error fetching admin data:', error);
+        setUsers([]); // Set empty array as fallback
+        setStats(null);
       } finally {
         setLoading(false);
       }
@@ -31,9 +33,13 @@ const AdminPanel = () => {
   const handleRoleChange = async (userId, newRole) => {
     try {
       await apiService.admin.updateUserRole(userId, newRole);
-      setUsers(users.map(user => 
-        user.id === userId ? { ...user, role: newRole } : user
-      ));
+      setUsers(prevUsers => {
+        // Ensure users is an array before mapping
+        if (!Array.isArray(prevUsers)) return [];
+        return prevUsers.map(user => 
+          user.id === userId ? { ...user, role: newRole } : user
+        );
+      });
     } catch (error) {
       console.error('Error updating user role:', error);
     }
@@ -103,12 +109,12 @@ const AdminPanel = () => {
                 </tr>
               </thead>
               <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                {users.map((user) => (
+                {Array.isArray(users) ? users.map((user) => (
                   <tr key={user.id}>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div>
                         <div className="text-sm font-medium text-gray-900 dark:text-white">
-                          {user.fullName}
+                          {user.name || user.fullName}
                         </div>
                         <div className="text-sm text-gray-500 dark:text-gray-400">
                           {user.email}
@@ -137,7 +143,13 @@ const AdminPanel = () => {
                       </button>
                     </td>
                   </tr>
-                ))}
+                )) : (
+                  <tr>
+                    <td colSpan="4" className="px-6 py-4 text-center text-gray-500 dark:text-gray-400">
+                      No users found
+                    </td>
+                  </tr>
+                )}
               </tbody>
             </table>
           </div>

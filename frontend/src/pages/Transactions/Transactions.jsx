@@ -47,17 +47,31 @@ const Transactions = () => {
         limit: pagination.limit
       };
       
+      console.log('Fetching transactions with params:', params); // Debug log
       const response = await apiService.transactions.getAll(params);
-      setTransactions(response.data.transactions || []);
+      console.log('Transactions response:', response); // Debug log
+      
+      const transactionsData = response.data?.transactions || response.data?.data?.transactions || [];
+      const totalCount = response.data?.total || response.data?.data?.total || 0;
+      const totalPages = response.data?.totalPages || response.data?.data?.totalPages || Math.ceil(totalCount / pagination.limit);
+      
+      setTransactions(transactionsData);
       setPagination(prev => ({
         ...prev,
         page: resetPage ? 1 : prev.page,
-        total: response.data.total || 0,
-        totalPages: response.data.totalPages || 0
+        total: totalCount,
+        totalPages: totalPages
       }));
     } catch (error) {
       console.error('Error fetching transactions:', error);
       toast.error('Failed to load transactions');
+      // Set empty state on error to prevent grey screen
+      setTransactions([]);
+      setPagination(prev => ({
+        ...prev,
+        total: 0,
+        totalPages: 0
+      }));
     } finally {
       setLoading(false);
     }
@@ -66,10 +80,16 @@ const Transactions = () => {
   // Fetch categories
   const fetchCategories = useCallback(async () => {
     try {
+      console.log('Fetching categories...'); // Debug log
       const response = await apiService.categories.getAll();
-      setCategories(response.data || []);
+      console.log('Categories response:', response); // Debug log
+      
+      const categoriesData = response.data?.data?.categories || response.data?.categories || [];
+      setCategories(categoriesData);
     } catch (error) {
       console.error('Error fetching categories:', error);
+      setCategories([]); // Set empty array as fallback
+      // Don't show error toast for categories as it's not critical for initial render
     }
   }, []);
 
@@ -223,26 +243,28 @@ const Transactions = () => {
         </div>
 
         {/* Summary Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm">
-            <p className="text-sm text-gray-600 dark:text-gray-400">Total Transactions</p>
-            <p className="text-xl font-bold text-gray-900 dark:text-white">{summaryStats.total}</p>
+        {!loading && (
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm">
+              <p className="text-sm text-gray-600 dark:text-gray-400">Total Transactions</p>
+              <p className="text-xl font-bold text-gray-900 dark:text-white">{summaryStats.total}</p>
+            </div>
+            <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm">
+              <p className="text-sm text-gray-600 dark:text-gray-400">Total Income</p>
+              <p className="text-xl font-bold text-green-600">{formatCurrency(summaryStats.income)}</p>
+            </div>
+            <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm">
+              <p className="text-sm text-gray-600 dark:text-gray-400">Total Expenses</p>
+              <p className="text-xl font-bold text-red-600">{formatCurrency(summaryStats.expenses)}</p>
+            </div>
+            <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm">
+              <p className="text-sm text-gray-600 dark:text-gray-400">Balance</p>
+              <p className={`text-xl font-bold ${summaryStats.balance >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                {formatCurrency(summaryStats.balance)}
+              </p>
+            </div>
           </div>
-          <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm">
-            <p className="text-sm text-gray-600 dark:text-gray-400">Total Income</p>
-            <p className="text-xl font-bold text-green-600">{formatCurrency(summaryStats.income)}</p>
-          </div>
-          <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm">
-            <p className="text-sm text-gray-600 dark:text-gray-400">Total Expenses</p>
-            <p className="text-xl font-bold text-red-600">{formatCurrency(summaryStats.expenses)}</p>
-          </div>
-          <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm">
-            <p className="text-sm text-gray-600 dark:text-gray-400">Balance</p>
-            <p className={`text-xl font-bold ${summaryStats.balance >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-              {formatCurrency(summaryStats.balance)}
-            </p>
-          </div>
-        </div>
+        )}
 
         {/* Filters */}
         <TransactionFilters

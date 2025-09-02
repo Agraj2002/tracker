@@ -2,9 +2,21 @@ import React, { createContext, useContext, useReducer, useCallback, useMemo } fr
 import axios from 'axios';
 import toast from 'react-hot-toast';
 
+// Helper function to safely parse JSON from localStorage
+const getStoredUser = () => {
+  try {
+    const storedUser = localStorage.getItem('user');
+    return storedUser ? JSON.parse(storedUser) : null;
+  } catch (error) {
+    console.error('Error parsing stored user data:', error);
+    localStorage.removeItem('user'); // Remove corrupted data
+    return null;
+  }
+};
+
 // Initial state for authentication
 const initialState = {
-  user: null,
+  user: getStoredUser(),
   token: localStorage.getItem('token'),
   isAuthenticated: !!localStorage.getItem('token'),
   loading: false,
@@ -92,6 +104,27 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
 
+  // Get current user function - defined early to avoid hoisting issues
+  const getCurrentUser = useCallback(async () => {
+    if (!state.token) return;
+
+    try {
+      const response = await axios.get('/api/auth/me');
+      // Check if response has nested data structure
+      const user = response.data.data?.user || response.data.user || response.data.data || response.data;
+      dispatch({
+        type: AUTH_ACTIONS.SET_USER,
+        payload: user
+      });
+    } catch (error) {
+      console.error('Error fetching current user:', error);
+      // Only logout if it's an authentication error (401/403)
+      if (error.response?.status === 401 || error.response?.status === 403) {
+        dispatch({ type: AUTH_ACTIONS.LOGOUT });
+      }
+    }
+  }, [state.token]);
+
   // Set up axios interceptor for authentication
   React.useEffect(() => {
     if (state.token) {
@@ -100,8 +133,25 @@ export const AuthProvider = ({ children }) => {
     } else {
       delete axios.defaults.headers.common['Authorization'];
       localStorage.removeItem('token');
+      localStorage.removeItem('user');
     }
   }, [state.token]);
+
+  // Save user data to localStorage when it changes
+  React.useEffect(() => {
+    if (state.user) {
+      localStorage.setItem('user', JSON.stringify(state.user));
+    } else if (!state.token) {
+      localStorage.removeItem('user');
+    }
+  }, [state.user, state.token]);
+
+  // Initialize user data on app load if token exists but no user data
+  React.useEffect(() => {
+    if (state.token && !state.user && !state.loading) {
+      getCurrentUser();
+    }
+  }, [state.token, state.user, state.loading, getCurrentUser]);
 
   // Login function with useCallback for optimization
   const login = useCallback(async (credentials) => {
@@ -109,7 +159,7 @@ export const AuthProvider = ({ children }) => {
     
     try {
       const response = await axios.post('/api/auth/login', credentials);
-      const { user, token } = response.data;
+      const { user, token } = response.data.data; // Extract from response.data.data
       
       dispatch({
         type: AUTH_ACTIONS.LOGIN_SUCCESS,
@@ -135,7 +185,7 @@ export const AuthProvider = ({ children }) => {
     
     try {
       const response = await axios.post('/api/auth/register', userData);
-      const { user, token } = response.data;
+      const { user, token } = response.data.data; // Extract from response.data.data
       
       dispatch({
         type: AUTH_ACTIONS.SIGNUP_SUCCESS,
@@ -160,22 +210,6 @@ export const AuthProvider = ({ children }) => {
     dispatch({ type: AUTH_ACTIONS.LOGOUT });
     toast.success('Logged out successfully');
   }, []);
-
-  // Get current user function
-  const getCurrentUser = useCallback(async () => {
-    if (!state.token) return;
-
-    try {
-      const response = await axios.get('/api/auth/me');
-      dispatch({
-        type: AUTH_ACTIONS.SET_USER,
-        payload: response.data.user
-      });
-    } catch (error) {
-      console.error('Error fetching current user:', error);
-      logout();
-    }
-  }, [state.token, logout]);
 
   // Clear error function
   const clearError = useCallback(() => {

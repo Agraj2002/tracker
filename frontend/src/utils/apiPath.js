@@ -73,11 +73,9 @@ export const API_ENDPOINTS = {
   // Analytics endpoints
   ANALYTICS: {
     DASHBOARD: '/api/analytics/dashboard',
-    MONTHLY: '/api/analytics/monthly',
-    YEARLY: '/api/analytics/yearly',
-    CATEGORY_BREAKDOWN: '/api/analytics/category-breakdown',
-    INCOME_EXPENSE_TRENDS: '/api/analytics/income-expense-trends',
-    SPENDING_PATTERNS: '/api/analytics/spending-patterns',
+    TRENDS: '/api/analytics/trends',
+    PATTERNS: '/api/analytics/patterns',
+    BUDGET: '/api/analytics/budget',
   },
   
   // Admin endpoints
@@ -126,13 +124,9 @@ export const apiService = {
   // Analytics services
   analytics: {
     getDashboard: (params = {}) => api.get(API_ENDPOINTS.ANALYTICS.DASHBOARD, { params }),
-    getMonthly: (year, month) => api.get(API_ENDPOINTS.ANALYTICS.MONTHLY, { 
-      params: { year, month } 
-    }),
-    getYearly: (year) => api.get(API_ENDPOINTS.ANALYTICS.YEARLY, { params: { year } }),
-    getCategoryBreakdown: (params = {}) => api.get(API_ENDPOINTS.ANALYTICS.CATEGORY_BREAKDOWN, { params }),
-    getIncomeExpenseTrends: (params = {}) => api.get(API_ENDPOINTS.ANALYTICS.INCOME_EXPENSE_TRENDS, { params }),
-    getSpendingPatterns: (params = {}) => api.get(API_ENDPOINTS.ANALYTICS.SPENDING_PATTERNS, { params }),
+    getTrends: (params = {}) => api.get(API_ENDPOINTS.ANALYTICS.TRENDS, { params }),
+    getPatterns: (params = {}) => api.get(API_ENDPOINTS.ANALYTICS.PATTERNS, { params }),
+    getBudget: (params = {}) => api.get(API_ENDPOINTS.ANALYTICS.BUDGET, { params }),
   },
   
   // Admin services

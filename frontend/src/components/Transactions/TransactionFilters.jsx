@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import { FaSearch, FaTimes } from 'react-icons/fa';
 
-const TransactionFilters = ({ filters, categories, onFilterChange }) => {
+const TransactionFilters = ({ filters, categories = [], onFilterChange }) => {
   // Handle input changes with useCallback for optimization
   const handleInputChange = useCallback((field, value) => {
     onFilterChange({ [field]: value });
@@ -21,6 +21,9 @@ const TransactionFilters = ({ filters, categories, onFilterChange }) => {
   }, [onFilterChange]);
 
   const hasActiveFilters = filters.search || filters.category || filters.type || filters.dateFrom || filters.dateTo;
+
+  // Ensure categories is always an array
+  const safeCategories = Array.isArray(categories) ? categories : [];
 
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
@@ -68,7 +71,7 @@ const TransactionFilters = ({ filters, categories, onFilterChange }) => {
             className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-primary focus:border-primary"
           >
             <option value="">All Categories</option>
-            {categories.map((category) => (
+            {safeCategories.map((category) => (
               <option key={category.id} value={category.name}>
                 {category.name}
               </option>

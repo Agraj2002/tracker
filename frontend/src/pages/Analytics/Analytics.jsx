@@ -15,15 +15,15 @@ const Analytics = () => {
   const fetchAnalyticsData = useCallback(async () => {
     try {
       setLoading(true);
-      const [dashboard, categoryBreakdown, trends] = await Promise.all([
+      const [dashboard, patterns, trends] = await Promise.all([
         apiService.analytics.getDashboard({ timeframe }),
-        apiService.analytics.getCategoryBreakdown({ timeframe }),
-        apiService.analytics.getIncomeExpenseTrends({ timeframe })
+        apiService.analytics.getPatterns({ timeframe }),
+        apiService.analytics.getTrends({ timeframe })
       ]);
       
       setAnalyticsData({
         dashboard: dashboard.data,
-        categoryBreakdown: categoryBreakdown.data,
+        patterns: patterns.data,
         trends: trends.data
       });
     } catch (error) {
@@ -86,7 +86,7 @@ const Analytics = () => {
               Expense Breakdown
             </h3>
             <CategoryPieChart 
-              data={analyticsData?.categoryBreakdown || []} 
+              data={analyticsData?.patterns || []} 
             />
           </div>
         </div>
